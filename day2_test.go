@@ -4,7 +4,7 @@ import "testing"
 
 var ordertests = []struct {
 	in  string
-	out int64
+	out int
 }{
 	{"2x4", 0},
 	{"2x3x4", 58},
@@ -16,7 +16,7 @@ var ordertests = []struct {
 
 func TestOrders(t *testing.T) {
 	for _, tt := range ordertests {
-		o, _ := order(tt.in)
+		o, _ := Order(tt.in)
 
 		if o != tt.out {
 			t.Errorf("Got %d for %s, expected %d", o, tt.in, tt.out)

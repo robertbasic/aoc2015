@@ -10,7 +10,7 @@ import (
 )
 
 func day2() {
-	var tt int64
+	var tt int
 
 	file, _ := os.Open("./inputs/day2.txt")
 	defer file.Close()
@@ -18,24 +18,25 @@ func day2() {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		o, _ := order(scanner.Text())
+		o, _ := Order(scanner.Text())
 		tt = tt + o
 	}
 
 	fmt.Println("Order a total of: ", tt)
 }
 
-func order(dimensions string) (int64, error) {
-	var t int64
-	ns := strings.Split(dimensions, "x")
+func Order(dimensions string) (int, error) {
+	var t int
 
-	if len(ns) != 3 {
-		return t, errors.New("Incorrect dimensions")
+	ns, err := numbers(dimensions)
+
+	if err != nil {
+		return t, err
 	}
 
-	l, _ := strconv.ParseInt(string(ns[0]), 10, 32)
-	w, _ := strconv.ParseInt(string(ns[1]), 10, 32)
-	h, _ := strconv.ParseInt(string(ns[2]), 10, 32)
+	l, _ := strconv.Atoi(ns[0])
+	w, _ := strconv.Atoi(ns[1])
+	h, _ := strconv.Atoi(ns[2])
 
 	sides := sides(l, w, h)
 
@@ -46,8 +47,24 @@ func order(dimensions string) (int64, error) {
 	return t, nil
 }
 
-func sides(l int64, w int64, h int64) [3]int64 {
-	var sides [3]int64
+func Ribbon(dimensions string) int {
+	var length int
+
+	return length
+}
+
+func numbers(dimensions string) ([]string, error) {
+	ns := strings.Split(dimensions, "x")
+	fmt.Println(ns)
+	if len(ns) != 3 {
+		return nil, errors.New("Incorrect dimensions")
+	}
+
+	return ns, nil
+}
+
+func sides(l int, w int, h int) [3]int {
+	var sides [3]int
 
 	sides[0] = l * w
 	sides[1] = l * h
@@ -56,7 +73,7 @@ func sides(l int64, w int64, h int64) [3]int64 {
 	return sides
 }
 
-func smallest(sides [3]int64) int64 {
+func smallest(sides [3]int) int {
 	s := sides[0]
 
 	for _, a := range sides {
