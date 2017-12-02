@@ -10,8 +10,9 @@ import (
 	"strings"
 )
 
+// Day2 solves the day 2 puzzles
 func Day2() {
-	var tt int
+	var twp int
 	var tr int
 
 	file, _ := os.Open("./inputs/day2.txt")
@@ -21,38 +22,40 @@ func Day2() {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		o, _ := Order(line)
+		wp := WrappingPaper(line)
 		r := Ribbon(line)
-		tt = tt + o
+		twp = twp + wp
 		tr = tr + r
 	}
 
-	fmt.Println("Order a total of: ", tt)
+	fmt.Println("Need wrapping paper: ", twp)
 	fmt.Println("Need ribbon length: ", tr)
 }
 
-func Order(dimensions string) (int, error) {
-	var t int
+// WrappingPaper calculates the wrapping
+// paper require to wrap one present
+func WrappingPaper(dimensions string) int {
+	var twp int
 
 	ns, err := Numbers(dimensions)
 
 	if err != nil {
-		return t, err
+		return twp
 	}
 
-	l, _ := strconv.Atoi(ns[0])
-	w, _ := strconv.Atoi(ns[1])
-	h, _ := strconv.Atoi(ns[2])
+	dims := Dimensions(ns)
 
-	sides := Sides(l, w, h)
+	sides := Sides(dims[0], dims[1], dims[2])
 
-	s := Smallest(sides)
+	ss := sides[0]
 
-	t = sides[0]*2 + sides[1]*2 + sides[2]*2 + s
+	twp = sides[0]*2 + sides[1]*2 + sides[2]*2 + ss
 
-	return t, nil
+	return twp
 }
 
+// Ribbon calculates the ribbon length
+// required to put a ribbon on one present
 func Ribbon(dimensions string) int {
 	var length int
 
@@ -72,6 +75,8 @@ func Ribbon(dimensions string) int {
 	return length
 }
 
+// Numbers splits a line representing one package
+// dimensions by the "x"
 func Numbers(dimensions string) ([]string, error) {
 	ns := strings.Split(dimensions, "x")
 
@@ -82,18 +87,24 @@ func Numbers(dimensions string) ([]string, error) {
 	return ns, nil
 }
 
+// Dimensions converts an array of strings
+// into integers that represent the actual
+// dimensions and sorts that array of ints
 func Dimensions(numbers []string) [3]int {
-	l, _ := strconv.Atoi(numbers[0])
-	w, _ := strconv.Atoi(numbers[1])
-	h, _ := strconv.Atoi(numbers[2])
+	var nrs [3]int
 
-	nrs := [3]int{l, w, h}
+	for i, n := range numbers {
+		nrs[i], _ = strconv.Atoi(n)
+	}
 
 	sort.Ints(nrs[:])
 
 	return nrs
 }
 
+// Sides calculates the areas of the 3
+// different sides of a box
+// Sides are sorted
 func Sides(l int, w int, h int) [3]int {
 	var sides [3]int
 
@@ -101,17 +112,7 @@ func Sides(l int, w int, h int) [3]int {
 	sides[1] = l * h
 	sides[2] = h * w
 
+	sort.Ints(sides[:])
+
 	return sides
-}
-
-func Smallest(sides [3]int) int {
-	s := sides[0]
-
-	for _, a := range sides {
-		if a < s {
-			s = a
-		}
-	}
-
-	return s
 }

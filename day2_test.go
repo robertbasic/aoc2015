@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-var ordertests = []struct {
+var packagestests = []struct {
 	in  string
 	out int
 }{
@@ -27,11 +27,11 @@ var ribbontests = []struct {
 }
 
 func TestOrders(t *testing.T) {
-	for _, tt := range ordertests {
-		o, _ := Order(tt.in)
+	for _, tt := range packagestests {
+		wp := WrappingPaper(tt.in)
 
-		if o != tt.out {
-			t.Errorf("Got %d for %s, expected %d", o, tt.in, tt.out)
+		if wp != tt.out {
+			t.Errorf("Got %d for %s, expected %d", wp, tt.in, tt.out)
 		}
 	}
 }
