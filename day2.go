@@ -5,12 +5,14 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
 
-func day2() {
+func Day2() {
 	var tt int
+	var tr int
 
 	file, _ := os.Open("./inputs/day2.txt")
 	defer file.Close()
@@ -18,17 +20,21 @@ func day2() {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		o, _ := Order(scanner.Text())
+		line := scanner.Text()
+		o, _ := Order(line)
+		r := Ribbon(line)
 		tt = tt + o
+		tr = tr + r
 	}
 
 	fmt.Println("Order a total of: ", tt)
+	fmt.Println("Need ribbon length: ", tr)
 }
 
 func Order(dimensions string) (int, error) {
 	var t int
 
-	ns, err := numbers(dimensions)
+	ns, err := Numbers(dimensions)
 
 	if err != nil {
 		return t, err
@@ -38,9 +44,9 @@ func Order(dimensions string) (int, error) {
 	w, _ := strconv.Atoi(ns[1])
 	h, _ := strconv.Atoi(ns[2])
 
-	sides := sides(l, w, h)
+	sides := Sides(l, w, h)
 
-	s := smallest(sides)
+	s := Smallest(sides)
 
 	t = sides[0]*2 + sides[1]*2 + sides[2]*2 + s
 
@@ -50,12 +56,25 @@ func Order(dimensions string) (int, error) {
 func Ribbon(dimensions string) int {
 	var length int
 
+	ns, err := Numbers(dimensions)
+
+	if err != nil {
+		return length
+	}
+
+	dims := Dimensions(ns)
+
+	ribbon := dims[0]*2 + dims[1]*2
+	bow := dims[0] * dims[1] * dims[2]
+
+	length = ribbon + bow
+
 	return length
 }
 
-func numbers(dimensions string) ([]string, error) {
+func Numbers(dimensions string) ([]string, error) {
 	ns := strings.Split(dimensions, "x")
-	fmt.Println(ns)
+
 	if len(ns) != 3 {
 		return nil, errors.New("Incorrect dimensions")
 	}
@@ -63,7 +82,19 @@ func numbers(dimensions string) ([]string, error) {
 	return ns, nil
 }
 
-func sides(l int, w int, h int) [3]int {
+func Dimensions(numbers []string) [3]int {
+	l, _ := strconv.Atoi(numbers[0])
+	w, _ := strconv.Atoi(numbers[1])
+	h, _ := strconv.Atoi(numbers[2])
+
+	nrs := [3]int{l, w, h}
+
+	sort.Ints(nrs[:])
+
+	return nrs
+}
+
+func Sides(l int, w int, h int) [3]int {
 	var sides [3]int
 
 	sides[0] = l * w
@@ -73,7 +104,7 @@ func sides(l int, w int, h int) [3]int {
 	return sides
 }
 
-func smallest(sides [3]int) int {
+func Smallest(sides [3]int) int {
 	s := sides[0]
 
 	for _, a := range sides {

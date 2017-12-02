@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func day1() {
+func Day1() {
 	var floors string
 
 	file, _ := os.Open("./inputs/day1.txt")
@@ -19,13 +19,13 @@ func day1() {
 		floors = scanner.Text()
 	}
 
-	floor, _ := floor(floors)
-	basement, _ := basement(floors)
+	floor, _ := Floor(floors)
+	basement, _ := Basement(floors)
 	fmt.Println("The floor is: ", floor)
 	fmt.Println("Enters the basement at position: ", basement)
 }
 
-func floor(floors string) (int, error) {
+func Floor(floors string) (int, error) {
 	var f int
 
 	var u = rune('(')
@@ -44,7 +44,7 @@ func floor(floors string) (int, error) {
 	return f, nil
 }
 
-func basement(floors string) (int, error) {
+func Basement(floors string) (int, error) {
 	var f int
 	var p int
 
