@@ -36,20 +36,20 @@ var basementtests = []struct {
 
 func TestFloors(t *testing.T) {
 	for _, tt := range floortests {
-		f, _ := Floor(tt.in)
+		cf := CurrentFloor(tt.in)
 
-		if f != tt.out {
-			t.Errorf("Got %d, expected %d", f, tt.out)
+		if cf != tt.out {
+			t.Errorf("Got %d for %s, expected %d", cf, tt.in, tt.out)
 		}
 	}
 }
 
 func TestBasement(t *testing.T) {
 	for _, tt := range basementtests {
-		f, _ := Basement(tt.in)
+		bap := EnterBasementAt(tt.in)
 
-		if f != tt.out {
-			t.Errorf("Got %d for %s, expected %d", f, tt.in, tt.out)
+		if bap != tt.out {
+			t.Errorf("Got %d for %s, expected %d", bap, tt.in, tt.out)
 		}
 	}
 }

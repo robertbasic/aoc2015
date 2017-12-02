@@ -2,13 +2,13 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 )
 
+// Day1 solves the day 1 puzzles
 func Day1() {
-	var floors string
+	var directions string
 
 	file, _ := os.Open("./inputs/day1.txt")
 	defer file.Close()
@@ -16,55 +16,49 @@ func Day1() {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		floors = scanner.Text()
+		directions = scanner.Text()
 	}
 
-	floor, _ := Floor(floors)
-	basement, _ := Basement(floors)
-	fmt.Println("The floor is: ", floor)
-	fmt.Println("Enters the basement at position: ", basement)
+	cf := CurrentFloor(directions)
+	bap := EnterBasementAt(directions)
+	fmt.Println("The current floor is: ", cf)
+	fmt.Println("Enters the basement at position: ", bap)
 }
 
-func Floor(floors string) (int, error) {
-	var f int
+// CurrentFloor calculates the current floor
+// after following all the directions
+func CurrentFloor(directions string) int {
+	var cf int
 
-	var u = rune('(')
-	var d = rune(')')
-
-	for _, c := range floors {
-		if c == u {
-			f++
-		} else if c == d {
-			f--
-		} else {
-			return 0, errors.New("Unknown floor operation")
-		}
+	for _, dir := range directions {
+		calculateCurrentFloor(dir, &cf)
 	}
 
-	return f, nil
+	return cf
 }
 
-func Basement(floors string) (int, error) {
-	var f int
+// EnterBasementAt calculates the position at which
+// the basement is entered
+func EnterBasementAt(directions string) int {
+	var cf int
 	var p int
 
-	var u = rune('(')
-	var d = rune(')')
+	for i, dir := range directions {
+		calculateCurrentFloor(dir, &cf)
 
-	for i, c := range floors {
-		if c == u {
-			f++
-		} else if c == d {
-			f--
-		} else {
-			return 0, errors.New("Unknown floor operation")
-		}
-
-		if f < 0 {
+		if cf < 0 {
 			p = i + 1
 			break
 		}
 	}
 
-	return p, nil
+	return p
+}
+
+func calculateCurrentFloor(direction rune, cf *int) {
+	if direction == rune('(') {
+		*cf++
+	} else if direction == rune(')') {
+		*cf--
+	}
 }
