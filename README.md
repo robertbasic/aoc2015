@@ -1,3 +1,3 @@
 ## Advent of Code 2015
 
-Advent of Code 2017 edition with golang.
+Advent of Code 2015 edition with golang.
